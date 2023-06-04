@@ -30,11 +30,17 @@ class SimpleWebPage extends StatefulWidget {
 
 class _SimpleWebPageState extends State<SimpleWebPage> {
 
-// TODO add
-  List<IconLaunch> topIcons = [
-    IconLaunch(url: "https://t.me/timur_harin", icon: Icons.telegram),
-    IconLaunch(url: "https://github.com/timur-harin", icon: Icons.home),
-    IconLaunch(url: "https://leetcode.com/timur_harin/", icon: Icons.code),
+  List<IconLaunch> topElements = [
+    IconLaunch(url: "https://t.me/timur_harin", image: "assets/icons/telegram.png"),
+    IconLaunch(url: "https://github.com/timur-harin", image: "assets/icons/github.png"),
+    IconLaunch(url: "https://leetcode.com/timur_harin/", image: "assets/icons/leetcode.png"),
+  ];
+
+  List<TextLaunch> listElements = [
+    TextLaunch(url: "https://t.me/code_v_meshke", text: "Телеграмм канал о кроссплатформенной разработке"),
+    TextLaunch(url: "https://t.me/timur_harin_bot", text: "Бот с советами что посмотреть, что купить, что почитать"),
+    TextLaunch(url: "https://scholar.google.com/scholar?hl=en&as_sdt=0%2C5&q=Timur+Kharin&btnG=", text: "Здесь будут научные публикации и другие научные дела"),
+    TextLaunch(url: "https://www.youtube.com/playlist?list=PLz1kbB-Ej5hWeJ4ba_qO_kIdSjj473js4", text: "Здесь будут мои выступления на различных конференциях"),
   ];
 
 
@@ -48,38 +54,78 @@ class _SimpleWebPageState extends State<SimpleWebPage> {
               fit: BoxFit.cover)),
       child: Scaffold(
           backgroundColor: Colors.transparent,
-          body: Center(
-              child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              CircleAvatar(
-                radius: MediaQuery.of(context).size.width / 12,
-                backgroundImage: AssetImage("assets/images/me.jpeg"),
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  for (var icon in topIcons)
-                    IconButton(
-                      onPressed: () async => {
-                        if (!await launchUrl(Uri.parse(icon.url)))
-                          {throw Exception('Could not launch ${icon.url}}')}
-                      },
-                      icon: Icon(icon.icon),
-                      iconSize: MediaQuery.of(context).size.width / 20,
-                      color: Colors.white,
-                    )
-                ],
-              )
-            ],
-          ))),
+          body: SingleChildScrollView(
+            child: Center(
+                child: Padding(
+                  padding: EdgeInsets.all(MediaQuery.of(context).size.width / 20),
+                  child: Column(
+                              children: [
+                  CircleAvatar(
+                    radius: MediaQuery.of(context).size.width / 20,
+                    backgroundImage: const AssetImage("assets/images/me.jpeg"),
+                  ),
+                  Text("Timur Harin", style: TextStyle(fontSize: MediaQuery.of(context).size.width / 40, color: Colors.white)),
+                  Text("@timur_harin", style: TextStyle(fontSize: MediaQuery.of(context).size.width / 60, color: Colors.white)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      for (IconLaunch iconLaunch in topElements)
+                       InkWell(
+                          onTap: () async {
+                            await launchUrl(Uri.parse(iconLaunch.url));
+                          },
+                          child: Container(
+                            margin: const EdgeInsets.all(10),
+                            width: MediaQuery.of(context).size.width / 30,
+                            height: MediaQuery.of(context).size.width / 30,
+                            child: Image.asset(iconLaunch.image, color: Colors.white),
+                       )
+                       )
+                    ],
+                  ),
+                  Column(
+                    children: [
+                      for (TextLaunch textLaunch in listElements)
+                        InkWell(
+                          onTap: () async {
+                            await launchUrl(Uri.parse(textLaunch.url));
+                          },
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(50),
+                              color: Colors.black.withOpacity(0.4),
+                            ),
+                            width: MediaQuery.of(context).size.width / 2,
+                            margin: const EdgeInsets.all(10),
+                            child: Padding(child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(textLaunch.text, style: TextStyle(fontSize: MediaQuery.of(context).size.width / 100, color: Colors.white), textAlign: TextAlign.center,),
+                                Icon(Icons.arrow_outward, color: Colors.white, size: MediaQuery.of(context).size.width / 100,)
+                              ],
+                            ), padding: EdgeInsets.all(MediaQuery.of(context).size.width / 100),),
+                          )
+                        )
+                    ],
+                  )
+                              ],
+                            ),
+                )),
+          )),
     );
   }
 }
 
 class IconLaunch {
-  const IconLaunch({required this.url, required this.icon});
+  IconLaunch({required this.url, required this.image});
 
   final String url;
-  final IconData icon;
+  final String image;
+}
+
+class TextLaunch{
+  TextLaunch({required this.url, required this.text});
+
+  final String url;
+  final String text;
 }
